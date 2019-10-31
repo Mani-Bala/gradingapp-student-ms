@@ -18,4 +18,7 @@ public interface GradeRepository extends JpaRepository<Grade, Integer>{
 	@Query(value="select g.* from student_grade g order by g.average desc", nativeQuery = true)
 	List<Grade> findTopToBottomGrade();
 
+	@Query("from Grade g where g.student.regno = ?1")
+	Grade findByRegNo(int regno);
+
 }

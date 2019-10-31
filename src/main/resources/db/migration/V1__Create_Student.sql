@@ -2,6 +2,7 @@ CREATE TABLE `student_details` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `regno` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
+  `email` varchar(60) NOT NULL UNIQUE,
   PRIMARY KEY (`id`),
   UNIQUE KEY `regno` (`regno`)
 ); 

@@ -24,4 +24,15 @@ public class StudentValidator {
 			if( list.size() != 0 )
 				throw new ValidatorException(regno+ MessageConstants.ALREADY_UPDATED);
 		}
+		
+		public void isRegnoExist(int regno) throws ValidatorException{
+			
+			List<StudentMark> list = null;
+			list = studentMarkRepository.findByRegNo(regno);	
+			
+			System.out.println(list);
+			if( list.size() == 0 )
+				throw new ValidatorException(MessageConstants.MARK_DOESNOT_UPDATED);
+			
+		}
 }
