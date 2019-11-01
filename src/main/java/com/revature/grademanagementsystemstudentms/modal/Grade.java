@@ -30,7 +30,7 @@ public class Grade implements Serializable{
 	private Integer id;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name= "student_id", referencedColumnName = "id")
+	@JoinColumn(name= "student_id", referencedColumnName = "regno")
 	private Student student;
 	
 	@Column(name="grade")

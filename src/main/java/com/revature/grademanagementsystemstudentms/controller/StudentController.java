@@ -37,7 +37,7 @@ public class StudentController {
 		Student student = null;
 		Message message = null;
 		try {
-			student = studentService.addstudent(studentDto.getName(), studentDto.getRegNo(), studentDto.getEmail());
+			student = studentService.addstudent(studentDto.getName(), studentDto.getEmail());
 			return new ResponseEntity<>(student, HttpStatus.OK);
 		} catch (Exception e) {
 			errorMessage = e.getMessage();

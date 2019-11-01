@@ -16,8 +16,6 @@ import lombok.Data;
 public class Student {
 	 @Id
 	 @GeneratedValue(strategy=GenerationType.IDENTITY)
-	 @Column(name="id")
-	 private int id;
 	 @Column(name="regno")
 	 private int regno;
 	 @Column(name="name")

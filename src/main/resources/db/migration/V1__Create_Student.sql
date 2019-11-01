@@ -1,11 +1,10 @@
 CREATE TABLE `student_details` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `regno` int(11) NOT NULL,
+  `regno` int(11) PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `email` varchar(60) NOT NULL UNIQUE,
-  PRIMARY KEY (`id`),
   UNIQUE KEY `regno` (`regno`)
 ); 
+alter table student_details auto_increment=1001;
 
 CREATE TABLE `student_grade` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -14,7 +13,7 @@ CREATE TABLE `student_grade` (
   `average` float NOT NULL,
   PRIMARY KEY (`id`),
   KEY `student_id` (`student_id`),
-  CONSTRAINT `student_grade_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student_details` (`id`)
+  CONSTRAINT `student_grade_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student_details` (`regno`)
 ); 
 
 CREATE TABLE `student_mark` (
@@ -24,6 +23,6 @@ CREATE TABLE `student_mark` (
   `mark` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `student_id` (`student_id`),
-  CONSTRAINT `student_mark_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student_details` (`id`),
+  CONSTRAINT `student_mark_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student_details` (`regno`),
   CONSTRAINT `student_mark_chk_1` CHECK (((`mark` > 0) and (`mark` < 100)))
 ) 

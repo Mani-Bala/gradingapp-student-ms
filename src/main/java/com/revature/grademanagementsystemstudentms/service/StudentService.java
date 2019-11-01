@@ -2,6 +2,7 @@ package com.revature.grademanagementsystemstudentms.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,10 +54,9 @@ public class StudentService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(StudentService.class);
 
 	@Transactional
-	public Student addstudent(String name, int regno, String email) throws ServiceException {
+	public Student addstudent(String name, String email) throws ServiceException {
 		Student student = new Student();
 		student.setName(name);
-		student.setRegno(regno);
 		student.setEmail(email);
 		try {
 			student = studentRepository.save(student);
@@ -83,7 +83,7 @@ public class StudentService {
 		LOGGER.debug("Student Details: "+findByRegNo);
 		for (StudentMark studentMark : list) {
 			studentMark.setStudent(findByRegNo);
-			studentMarkRepository.save(studentMark);
+			//studentMarkRepository.save(studentMark);
 		}
 
 		int total = 0;
@@ -102,24 +102,28 @@ public class StudentService {
 		grade.setGrade(gradeRange);
 		grade.setStudent(findByRegNo);
 
-		gradeRepository.save(grade);
+		//gradeRepository.save(grade);
 		
 		List<StudentMark> markList = getStudentMarks(regno);
 		
+		/* Get subject list from getSubjectList() */
+		Map<Integer, SubjectDTO> subjectDtoList = subjectClient.getSubjectList();
+		
+		MarkSubjectUtil util = new MarkSubjectUtil(subjectDtoList);
 		List<MarkDto> mark = new ArrayList<MarkDto>();
 		for (StudentMark studentMark : markList) {
-			MarkDto markDTO = new MarkDto();
-			markDTO.setMark(studentMark.getMark());
+			
+			MarkDto markDTO = util.convertToMarkDto(studentMark);
+			
 			mark.add(markDTO);
 		}
 
 		StudentGradeDTO studentResult = getStudentResult(regno);
 		
-		/* Get subject list from getSubjectList() */
-		List<SubjectDTO> subjectDtoList = subjectClient.getSubjectList();
+		
 		
 		/* store marks, studentDetails, subject in a DTO(ResultResponseDto) class */
-		MailResultDto resultDto = new MailResultDto(mark, studentResult, subjectDtoList);
+		MailResultDto resultDto = new MailResultDto(mark, studentResult);
 		
 		mailService.sendMail(resultDto);
 		

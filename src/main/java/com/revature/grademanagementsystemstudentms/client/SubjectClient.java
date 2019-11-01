@@ -1,6 +1,6 @@
 package com.revature.grademanagementsystemstudentms.client;
 
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,26 +15,41 @@ import com.revature.grademanagementsystemstudentms.service.StudentService;
 @Service
 public class SubjectClient {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(StudentService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SubjectClient.class);
 
 	private static final String message = "Trace Message :";
 	
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	public List<SubjectDTO> getSubjectList() {
+	public Map<Integer, SubjectDTO> getSubjectList() {
 		/* Get subject list from subject microservice api */
-		List<SubjectDTO> subjectDtoList = null;
+		List<SubjectDTO> subjectDtoList = new ArrayList<>();
+		Map<Integer,SubjectDTO> subjectMap = new HashMap<Integer,SubjectDTO>();
 		String msg = null;
 		try {
 			String apiUrl = "https://gradingappsubject.herokuapp.com";
 			ResponseEntity<List> postForEntity1 = restTemplate.getForEntity(apiUrl + "/subjectList", List.class);
-			subjectDtoList = postForEntity1.getBody();
-
+			//subjectDtoList = postForEntity1.getBody();
+			List<LinkedHashMap> list = postForEntity1.getBody();
+			for (LinkedHashMap map : list) {
+				
+				Integer id = (Integer) map.get("id");
+				String code = (String) map.get("code");
+				String name = (String) map.get("name");
+				SubjectDTO dto = new SubjectDTO(id, code, name);
+				subjectMap.put(id, dto);/*
+										 * for(Object key: map.keySet()) { Object values = map.get(key);
+										 * System.out.println(key + " -" + values); }
+										 */
+			}
+			
+            
 			System.out.println(subjectDtoList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.trace(message, e);
 		}
-		return subjectDtoList;
+		return subjectMap;
 	}
 }

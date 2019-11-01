@@ -7,16 +7,13 @@ import lombok.Data;
 @Data
 public class MailResultDto {
 
-private List<MarkDto> marks;
-	
+	private List<MarkDto> marks;
+
 	private StudentGradeDTO studentGrade;
 
-	private List<SubjectDTO> subjectDTO;
-	
-	public MailResultDto(List<MarkDto> marks, StudentGradeDTO studentGradeDTO, List<SubjectDTO> subjectDTO) {
+	public MailResultDto(List<MarkDto> marks, StudentGradeDTO studentGradeDTO) {
 		super();
 		this.marks = marks;
 		this.studentGrade = studentGradeDTO;
-		this.subjectDTO = subjectDTO;
 	}
 }

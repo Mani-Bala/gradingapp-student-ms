@@ -9,16 +9,13 @@ import lombok.Data;
 @Data
 public class ResultResponseDto {
 
-	private List<StudentMark> marks;
-	
 	private StudentGradeDTO studentGrade;
 
-	private List<SubjectDTO> subjectDTO;
+	private List<MarkDto> markList;
 	
-	public ResultResponseDto(List<StudentMark> marks, StudentGradeDTO studentGradeDTO, List<SubjectDTO> subjectDTO) {
-		super();
-		this.marks = marks;
+	public ResultResponseDto(List<MarkDto> markList, StudentGradeDTO studentGradeDTO) {
+
+		this.markList = markList;
 		this.studentGrade = studentGradeDTO;
-		this.subjectDTO = subjectDTO;
 	}
 }
