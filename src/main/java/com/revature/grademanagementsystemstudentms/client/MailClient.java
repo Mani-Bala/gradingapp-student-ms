@@ -24,7 +24,7 @@ public class MailClient {
 	public void sendMail(MailResultDto resultDto) {
 		try {
 
-			String apiUrl = "https://charity-notification.herokuapp.com/";
+			String apiUrl = "https://checker-notify-ms.herokuapp.com/";
 			ResponseEntity postForEntity = restTemplate.postForEntity(apiUrl + "/student/mark",resultDto, void.class);
 
 		} catch (Exception e) {
