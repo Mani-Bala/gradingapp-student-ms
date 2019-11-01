@@ -3,6 +3,7 @@ package com.revature.grademanagementsystemstudentms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,4 +17,7 @@ public interface StudentRepository  extends JpaRepository<Student, Integer>{
 
 	@Query("from Student sd where sd.regno = ?1")
 	Student findByRegNo(int regno);
+
+	@Query("from Student s where s.regno = :regno and s.email = :email")
+	Student findByRegnoAndEmail(@Param("regno") int regno, @Param("email") String email);
 }

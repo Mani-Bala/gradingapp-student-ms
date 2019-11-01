@@ -18,12 +18,14 @@ import com.revature.grademanagementsystemstudentms.dto.MarkDto;
 import com.revature.grademanagementsystemstudentms.dto.StudentGradeDTO;
 import com.revature.grademanagementsystemstudentms.dto.SubjectDTO;
 import com.revature.grademanagementsystemstudentms.exception.ServiceException;
+import com.revature.grademanagementsystemstudentms.exception.ValidatorException;
 import com.revature.grademanagementsystemstudentms.modal.Grade;
 import com.revature.grademanagementsystemstudentms.modal.Student;
 import com.revature.grademanagementsystemstudentms.modal.StudentMark;
 import com.revature.grademanagementsystemstudentms.repository.GradeRepository;
 import com.revature.grademanagementsystemstudentms.repository.StudentMarkRepository;
 import com.revature.grademanagementsystemstudentms.repository.StudentRepository;
+import com.revature.grademanagementsystemstudentms.validator.StudentValidator;
 
 @Service
 public class StudentService {
@@ -44,6 +46,9 @@ public class StudentService {
 	
 	@Autowired
 	private SubjectClient subjectClient;
+	
+	@Autowired
+	private StudentValidator studentvalidator;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StudentService.class);
 
@@ -156,6 +161,24 @@ public class StudentService {
 		dto.setAvg(studentGrade.getAverage());
 		dto.setGrade(studentGrade.getGrade());
 		return dto;
+	}
+
+	public Student login(int regno, String email) throws ServiceException {
+		Student student = null;
+		System.out.println(regno +" : "+ email);
+		try {
+			studentvalidator.loginInput(regno, email);
+				
+			student = studentRepository.findByRegnoAndEmail(regno, email);
+			System.out.println(student);
+			if (student == null) {
+				throw new ServiceException(MessageConstants.INVALID_CREDENTIAL);
+			}
+		} catch (ValidatorException e) {
+				LOGGER.error("Exception:", e);
+				throw new ServiceException(e.getMessage());
+		}
+	return student;
 	}
 
 	

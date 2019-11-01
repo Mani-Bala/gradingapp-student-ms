@@ -35,4 +35,12 @@ public class StudentValidator {
 				throw new ValidatorException(MessageConstants.MARK_DOESNOT_UPDATED);
 			
 		}
+
+		public void loginInput(int regno, String email) throws ValidatorException {
+			
+			if (regno <= 0 || "".equals(email.trim())) {
+				throw new ValidatorException(MessageConstants.INVALID_CREDENTIAL);
+			}
+			
+		}
 }

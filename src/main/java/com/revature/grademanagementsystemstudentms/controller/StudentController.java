@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.revature.grademanagementsystemstudentms.configuration.Message;
 import com.revature.grademanagementsystemstudentms.dto.StudentDto;
+import com.revature.grademanagementsystemstudentms.exception.ServiceException;
 import com.revature.grademanagementsystemstudentms.modal.Student;
 import com.revature.grademanagementsystemstudentms.service.StudentService;
 
@@ -42,5 +45,23 @@ public class StudentController {
 			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 
 		}
+	}
+	
+	@GetMapping("/login")
+    @ApiOperation(value = "Login API")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully LogedIn", response = Student.class),
+            @ApiResponse(code = 400, message = "Invalid Access", response = Message.class) })
+	  public ResponseEntity<?> loginController(@RequestParam("regno") int regno, @RequestParam("email") String email) {
+		 String errorMessage = null;
+	      Student student=null;
+	      
+		 try {
+			 student = studentService.login(regno, email);
+	          return new ResponseEntity<>(student, HttpStatus.OK );
+	      } catch (ServiceException e) {
+	          errorMessage = e.getMessage();
+	          Message message = new Message(errorMessage);
+	          return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST );
+	      }
 	}
 }
