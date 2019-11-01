@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.grademanagementsystemstudentms.client.SubjectClient;
 import com.revature.grademanagementsystemstudentms.configuration.Message;
 import com.revature.grademanagementsystemstudentms.dto.ResultResponseDto;
 import com.revature.grademanagementsystemstudentms.dto.StudentGradeDTO;
@@ -28,6 +29,9 @@ public class ResultController {
 	private StudentService studentService;
 
 	@Autowired
+	private SubjectClient SubjectClient;
+
+	@Autowired
 	private StudentValidator studentValidator;
 	
 	@GetMapping("studentResult")
@@ -44,7 +48,7 @@ public class ResultController {
 			
 			studentResult = studentService.getStudentResult(regno);
 			markList = studentService.getStudentMarks(regno);
-			subjectDTO = studentService.getSubjectList();
+			subjectDTO = SubjectClient.getSubjectList();
 			ResultResponseDto result = new ResultResponseDto(markList, studentResult, subjectDTO);
 
 			return new ResponseEntity<>(result, HttpStatus.OK);

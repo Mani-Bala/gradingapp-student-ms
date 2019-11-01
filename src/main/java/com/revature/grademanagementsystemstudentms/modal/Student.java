@@ -22,4 +22,6 @@ public class Student {
 	 private int regno;
 	 @Column(name="name")
 	 private String name;
+	 @Column(name="email")
+	 private String email;
 }

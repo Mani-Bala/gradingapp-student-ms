@@ -6,13 +6,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
+import com.revature.grademanagementsystemstudentms.client.GradeClient;
+import com.revature.grademanagementsystemstudentms.client.MailClient;
+import com.revature.grademanagementsystemstudentms.client.SubjectClient;
 import com.revature.grademanagementsystemstudentms.configuration.MessageConstants;
-import com.revature.grademanagementsystemstudentms.dto.StudentDto;
+import com.revature.grademanagementsystemstudentms.dto.MailResultDto;
+import com.revature.grademanagementsystemstudentms.dto.MarkDto;
+import com.revature.grademanagementsystemstudentms.dto.ResultResponseDto;
 import com.revature.grademanagementsystemstudentms.dto.StudentGradeDTO;
 import com.revature.grademanagementsystemstudentms.dto.SubjectDTO;
 import com.revature.grademanagementsystemstudentms.exception.ServiceException;
@@ -35,15 +38,22 @@ public class StudentService {
 	private StudentMarkRepository studentMarkRepository;
 
 	@Autowired
-	private RestTemplate restTemplate;
+	private MailClient mailService;
+	
+	@Autowired
+	private GradeClient gradeClient;
+	
+	@Autowired
+	private SubjectClient subjectClient;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StudentService.class);
 
 	@Transactional
-	public Student addstudent(String name, int regno) throws ServiceException {
+	public Student addstudent(String name, int regno, String email) throws ServiceException {
 		Student student = new Student();
 		student.setName(name);
 		student.setRegno(regno);
+		student.setEmail(email);
 		try {
 			student = studentRepository.save(student);
 		} catch (Exception e) {
@@ -81,18 +91,7 @@ public class StudentService {
 		LOGGER.debug("Average:" + avg);
 		
 		/* Get the grade based on average from grade microservice api */
-		String gradeRange = null;
-		try {
-			String apiUrl = "https://gradingsystemgrade.herokuapp.com";
-			ResponseEntity<String> postForEntity = restTemplate.getForEntity(apiUrl + "/ScoreRange/" + avg,
-					String.class);
-			gradeRange = postForEntity.getBody();
-
-			System.out.println(gradeRange);
-		} catch (Exception e) {
-			LOGGER.trace(gradeRange, e);
-		}
-		
+		String gradeRange = gradeClient.getGrade(avg);		
 		Grade grade = new Grade();
 
 		grade.setAverage(avg);
@@ -102,47 +101,26 @@ public class StudentService {
 		gradeRepository.save(grade);
 		
 		List<StudentMark> markList = getStudentMarks(regno);
+		
+		List<MarkDto> mark = null;
+		for (StudentMark studentMark : markList) {
+			MarkDto markDTO = new MarkDto();
+			markDTO.setMark(studentMark.getMark());
+			mark.add(markDTO);
+		}
+
 		StudentGradeDTO studentResult = getStudentResult(regno);
 		
 		/* Get subject list from getSubjectList() */
-		List<SubjectDTO> subjectDtoList = getSubjectList();
+		List<SubjectDTO> subjectDtoList = subjectClient.getSubjectList();
 		
-		/* Iterate marks, studentDetails, subject in a DTO(StudentDto) class */
-		List<StudentDto> studentDtoList = new ArrayList<StudentDto>();
-		for (StudentMark studentMark : markList) {
-			for (SubjectDTO subjectDTO : subjectDtoList) {
-				StudentDto dto = toStudentDto(studentMark, studentResult, subjectDTO);
-				
-				studentDtoList.add(dto);
-			}
-		}
+		/* store marks, studentDetails, subject in a DTO(ResultResponseDto) class */
+		MailResultDto resultDto = new MailResultDto(mark, studentResult, subjectDtoList);
 		
-		/* send result to student mail through mail notification service */
-		List<StudentDto> mailList = null;
-		try {
-
-			String apiUrl = "https://charity-notification.herokuapp.com/";
-			ResponseEntity<List> postForEntity2 = restTemplate.getForEntity(apiUrl + "/student/mark/" + mailList, List.class);
-			mailList = postForEntity2.getBody();
-
-			System.out.println(mailList);
-		} catch (Exception e) {
-			LOGGER.trace(gradeRange, e);
-		}
+		mailService.sendMail(resultDto);
+		
 	}
 	
-	private StudentDto toStudentDto(StudentMark studentMark, StudentGradeDTO studentResult, SubjectDTO subjectDTO) {
-		StudentDto dto = new StudentDto();
-		
-		dto.setStudentName(studentResult.getStudentName());
-		dto.setRegNo(studentResult.getRegNo());
-		dto.setAvg(studentResult.getAvg());
-		dto.setGrade(studentResult.getGrade());
-		dto.setMark(studentMark.getMark());
-		dto.setSubject(subjectDTO.getSubName());
-		return dto;
-	}
-
 	/** 
 	 * getStudentResult Service in UserService
 	 * @Param regNo
@@ -175,25 +153,12 @@ public class StudentService {
 		final Student student = studentGrade.getStudent();
 		dto.setRegNo(student.getRegno());
 		dto.setStudentName(student.getName());
+		dto.setEmail(student.getEmail());
 		dto.setAvg(studentGrade.getAverage());
 		dto.setGrade(studentGrade.getGrade());
 		return dto;
 	}
 
-	public List<SubjectDTO> getSubjectList() {
-		/* Get subject list from subject microservice api */
-		List<SubjectDTO> subjectDtoList = null;
-		String msg = null;
-		try {
-			String apiUrl = "https://gradingappsubject.herokuapp.com";
-			ResponseEntity<List> postForEntity1 = restTemplate.getForEntity(apiUrl + "/subjectList", List.class);
-			subjectDtoList = postForEntity1.getBody();
-
-			System.out.println(subjectDtoList);
-		} catch (Exception e) {
-			LOGGER.trace(msg, e);
-		}
-		return subjectDtoList;
-	}
+	
 
 }

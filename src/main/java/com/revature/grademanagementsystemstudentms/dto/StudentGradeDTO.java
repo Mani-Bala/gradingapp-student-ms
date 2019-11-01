@@ -13,5 +13,5 @@ public class StudentGradeDTO {
 	
 	private String grade;
 
-
+	private String email;
 }
