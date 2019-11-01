@@ -15,7 +15,6 @@ import com.revature.grademanagementsystemstudentms.client.SubjectClient;
 import com.revature.grademanagementsystemstudentms.configuration.MessageConstants;
 import com.revature.grademanagementsystemstudentms.dto.MailResultDto;
 import com.revature.grademanagementsystemstudentms.dto.MarkDto;
-import com.revature.grademanagementsystemstudentms.dto.ResultResponseDto;
 import com.revature.grademanagementsystemstudentms.dto.StudentGradeDTO;
 import com.revature.grademanagementsystemstudentms.dto.SubjectDTO;
 import com.revature.grademanagementsystemstudentms.exception.ServiceException;
@@ -102,7 +101,7 @@ public class StudentService {
 		
 		List<StudentMark> markList = getStudentMarks(regno);
 		
-		List<MarkDto> mark = null;
+		List<MarkDto> mark = new ArrayList<MarkDto>();
 		for (StudentMark studentMark : markList) {
 			MarkDto markDTO = new MarkDto();
 			markDTO.setMark(studentMark.getMark());

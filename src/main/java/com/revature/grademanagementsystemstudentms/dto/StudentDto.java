@@ -6,10 +6,6 @@ import lombok.Data;
 public class StudentDto {
 
 	private int regNo;
-	private String studentName;
-	private String subject ;
-	private int mark;
-	private float avg;
-	private String grade;
+	private String name;
 	private String email;
 }
