@@ -76,7 +76,7 @@ public class MarksController {
 		String errorMessage = null;
 		String status = "";
 		try {
-			//studentValidator.isRegnoUpdated(updateMark.getRegno());
+			studentValidator.isRegnoUpdated(updateMark.getRegno());
 
 			studentService.updateMarksAndGradeService(updateMark.getRegno(), list);
 

@@ -136,7 +136,6 @@ public class StudentService {
 	 * return StudentGradeDTO object
 	 */
 	public StudentGradeDTO getStudentResult(int regno) {
-		System.out.println("---------> "+regno);
 		Grade gradeDetail = gradeRepository.findByRegNo(regno);
 		StudentGradeDTO dto = toStudentGradeDTO(gradeDetail);
 		return dto;
@@ -159,7 +158,6 @@ public class StudentService {
 	 */
 	public StudentGradeDTO toStudentGradeDTO(Grade studentGrade) {
 		StudentGradeDTO dto = new StudentGradeDTO();
-		System.out.println(studentGrade);
 		final Student student = studentGrade.getStudent();
 		
 		dto.setRegNo(student.getRegno());
