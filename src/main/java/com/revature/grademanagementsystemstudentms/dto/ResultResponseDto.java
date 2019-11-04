@@ -2,8 +2,6 @@ package com.revature.grademanagementsystemstudentms.dto;
 
 import java.util.List;
 
-import com.revature.grademanagementsystemstudentms.modal.StudentMark;
-
 import lombok.Data;
 
 @Data

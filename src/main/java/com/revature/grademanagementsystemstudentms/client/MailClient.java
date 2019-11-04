@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.grademanagementsystemstudentms.dto.MailResultDto;
-import com.revature.grademanagementsystemstudentms.service.StudentService;
 
 @Service
 public class MailClient {
@@ -30,7 +29,7 @@ public class MailClient {
 
 			String jsonStr = Obj.writeValueAsString(resultDto); 
 			System.out.println(jsonStr);
-			String apiUrl = "https://checker-notify-ms.herokuapp.com/";
+			String apiUrl = "https://charity-notification.herokuapp.com/";
 			String param = "?applicationName=gradeapp&email="+ resultDto.getStudentGrade().getEmail() + "&name=Mark Details"; 
 			ResponseEntity postForEntity = restTemplate.postForEntity(apiUrl + "/student/mark" + param,resultDto, void.class);
 
