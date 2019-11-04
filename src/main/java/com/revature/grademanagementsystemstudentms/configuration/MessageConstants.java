@@ -16,4 +16,6 @@ public class MessageConstants {
       public static final String NO_RECORDS_AVAILABLE = "No record available";
       public static final String MARK_DOESNOT_UPDATED = "Your mark does not updated";
       public static final String INVALID_CREDENTIAL = "Invalid credential";
+      public static final String REGNO_NOT_AVAILABLE = "Register number not available";
+      
 }

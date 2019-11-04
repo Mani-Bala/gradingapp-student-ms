@@ -15,8 +15,8 @@ public interface StudentRepository  extends JpaRepository<Student, Integer>{
 //	@Query(" from Student where student_name = :student_name")
 //    List<Student> findByStudent(@Param("student_name") String studentName);
 
-	@Query("from Student sd where sd.regno = ?1")
-	Student findByRegNo(int regno);
+	@Query("from Student sd where sd.regno = :regno")
+	Student findByRegNo(@Param("regno") int regno);
 
 	@Query("from Student s where s.regno = :regno and s.email = :email")
 	Student findByRegnoAndEmail(@Param("regno") int regno, @Param("email") String email);

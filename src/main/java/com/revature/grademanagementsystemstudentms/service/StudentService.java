@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,20 +71,23 @@ public class StudentService {
 
 	/** 
 	 * update Marks And Grade Service in UserService
+	 * @throws ServiceException 
 	 * @Param regNo and List<StudentMark> marks
 	 * 
 	 * insert marks 
 	 * calculate total, average and grade
 	 * insert total, average and grade.
 	 */
-	public void updateMarksAndGradeService(int regno, List<StudentMark> list) {
-
+	public void updateMarksAndGradeService(int regno, List<StudentMark> list) throws ServiceException {
 		Student findByRegNo = studentRepository.findByRegNo(regno);
 
+		if(findByRegNo == null)
+			throw new ServiceException(MessageConstants.REGNO_NOT_AVAILABLE);
 		LOGGER.debug("Student Details: "+findByRegNo);
 		for (StudentMark studentMark : list) {
 			studentMark.setStudent(findByRegNo);
-			studentMarkRepository.save(studentMark);
+			System.out.println("------>"+studentMark);
+				studentMarkRepository.save(studentMark);
 		}
 
 		int total = 0;

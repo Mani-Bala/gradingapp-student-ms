@@ -82,7 +82,6 @@ public class MarksController {
 
 			status = "Success";
 		} catch (Exception e) {
-			e.printStackTrace();
 			errorMessage = e.getMessage();
 		}
 		if (status.equals("Success")) {
