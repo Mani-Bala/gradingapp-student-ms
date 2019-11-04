@@ -83,7 +83,7 @@ public class StudentService {
 		LOGGER.debug("Student Details: "+findByRegNo);
 		for (StudentMark studentMark : list) {
 			studentMark.setStudent(findByRegNo);
-			//studentMarkRepository.save(studentMark);
+			studentMarkRepository.save(studentMark);
 		}
 
 		int total = 0;
@@ -102,7 +102,7 @@ public class StudentService {
 		grade.setGrade(gradeRange);
 		grade.setStudent(findByRegNo);
 
-		//gradeRepository.save(grade);
+		gradeRepository.save(grade);
 		
 		List<StudentMark> markList = getStudentMarks(regno);
 		
@@ -136,8 +136,9 @@ public class StudentService {
 	 * return StudentGradeDTO object
 	 */
 	public StudentGradeDTO getStudentResult(int regno) {
-		Grade grade = gradeRepository.findByRegNo(regno);
-		StudentGradeDTO dto = toStudentGradeDTO(grade);
+		System.out.println("---------> "+regno);
+		Grade gradeDetail = gradeRepository.findByRegNo(regno);
+		StudentGradeDTO dto = toStudentGradeDTO(gradeDetail);
 		return dto;
 	}
 
@@ -158,7 +159,9 @@ public class StudentService {
 	 */
 	public StudentGradeDTO toStudentGradeDTO(Grade studentGrade) {
 		StudentGradeDTO dto = new StudentGradeDTO();
+		System.out.println(studentGrade);
 		final Student student = studentGrade.getStudent();
+		
 		dto.setRegNo(student.getRegno());
 		dto.setStudentName(student.getName());
 		dto.setEmail(student.getEmail());

@@ -29,7 +29,7 @@ public class MailClient {
 
 			String jsonStr = Obj.writeValueAsString(resultDto); 
 			System.out.println(jsonStr);
-			String apiUrl = "https://charity-notification.herokuapp.com/";
+			String apiUrl = "https://charity-notification.herokuapp.com";
 			String param = "?applicationName=gradeapp&email="+ resultDto.getStudentGrade().getEmail() + "&name=Mark Details"; 
 			ResponseEntity postForEntity = restTemplate.postForEntity(apiUrl + "/student/mark" + param,resultDto, void.class);
 
