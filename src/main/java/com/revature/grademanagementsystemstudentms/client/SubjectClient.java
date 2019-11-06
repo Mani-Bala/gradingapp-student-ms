@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.revature.grademanagementsystemstudentms.dto.SubjectDTO;
-import com.revature.grademanagementsystemstudentms.service.StudentService;
 
 @Service
 public class SubjectClient {
@@ -30,6 +29,7 @@ public class SubjectClient {
 		try {
 			String apiUrl = "https://gradingappsubject.herokuapp.com";
 			ResponseEntity<List> postForEntity1 = restTemplate.getForEntity(apiUrl + "/subjectList", List.class);
+			
 			//subjectDtoList = postForEntity1.getBody();
 			List<LinkedHashMap> list = postForEntity1.getBody();
 			for (LinkedHashMap map : list) {
@@ -38,13 +38,8 @@ public class SubjectClient {
 				String code = (String) map.get("code");
 				String name = (String) map.get("name");
 				SubjectDTO dto = new SubjectDTO(id, code, name);
-				subjectMap.put(id, dto);/*
-										 * for(Object key: map.keySet()) { Object values = map.get(key);
-										 * System.out.println(key + " -" + values); }
-										 */
+				subjectMap.put(id, dto);
 			}
-			
-            
 			System.out.println(subjectDtoList);
 		} catch (Exception e) {
 			e.printStackTrace();

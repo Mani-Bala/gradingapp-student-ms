@@ -33,7 +33,6 @@ public class StudentValidator {
 			System.out.println(list);
 			if( list.size() == 0 )
 				throw new ValidatorException(MessageConstants.MARK_DOESNOT_UPDATED);
-			
 		}
 
 		public void loginInput(int regno, String email) throws ValidatorException {

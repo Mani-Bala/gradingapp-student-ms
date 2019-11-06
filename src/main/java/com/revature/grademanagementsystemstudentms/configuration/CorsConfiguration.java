@@ -12,9 +12,10 @@ public class CorsConfiguration implements WebMvcConfigurer
 
             registry.addMapping("/**")
                     .allowedOrigins(
-                            "https://gradingapp-43d72.firebaseapp.com")
+                            "http://localhost:4200")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD")
                     .allowCredentials(true)
             ;
         }
 }
+ 
